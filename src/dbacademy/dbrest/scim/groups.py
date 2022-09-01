@@ -37,7 +37,7 @@ class ScimGroupsClient(ApiContainer):
 
         return None
 
-    def add_member(self, member_id: str):
+    def add_member(self, group_id:str, member_id: str):
         data = {
                   "schemas": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
                   "Operations": [
@@ -53,7 +53,7 @@ class ScimGroupsClient(ApiContainer):
                     }
                   ]
                }
-        self.client.execute_patch_json(self.base_uri, params=data)
+        self.client.execute_patch_json(f"{self.base_uri}/{group_id}", params=data)
 
     # def create(self, name):
     #     payload = {
