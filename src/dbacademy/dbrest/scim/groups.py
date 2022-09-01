@@ -37,6 +37,24 @@ class ScimGroupsClient(ApiContainer):
 
         return None
 
+    def add_member(self, member_id: str):
+        data = {
+                  "schemas": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+                  "Operations": [
+                    {
+                      "op": "add",
+                      "value": {
+                        "members": [
+                          {
+                            "value": member_id
+                          }
+                        ]
+                      }
+                    }
+                  ]
+               }
+        self.client.execute_patch_json(self.base_uri, params=data)
+
     # def create(self, name):
     #     payload = {
     #         "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
