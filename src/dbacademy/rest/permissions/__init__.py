@@ -23,7 +23,8 @@ class Permissions(ApiContainer):
         self.warehouses = Warehouses(client)
 
         class Authorization:
-            from dbacademy.rest.permissions.authorization_tokens import Tokens
-            self.tokens = Tokens(client)
+            def __init__(self):
+                from dbacademy.rest.permissions.authorization_tokens import Tokens
+                self.tokens = Tokens(client)
 
         self.authorizations = Authorization()
