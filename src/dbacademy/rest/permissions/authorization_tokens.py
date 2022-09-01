@@ -11,4 +11,5 @@ class Tokens(PermissionsCrud):
 
     @property
     def permission_levels(self):
-        return self.client.execute_get_json(f"{self.path}/permissionLevels")
+        response = self.client.execute_get_json(f"{self.path}/permissionLevels")
+        return response.ge("permission_levels", [])
