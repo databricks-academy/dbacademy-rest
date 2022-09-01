@@ -11,7 +11,8 @@ class DBAcademyRestClient(ApiClient):
                  user: str = None,
                  password: str = None,
                  authorization_header: str = None,
-                 client: ApiClient = None):
+                 client: ApiClient = None,
+                 verbose = False):
         """
         Create a Databricks REST API client.
 
@@ -36,6 +37,9 @@ class DBAcademyRestClient(ApiClient):
             from dbacademy_gems import dbgems
             #from dbacademy.rest.dbgems_fix import dbgems
             token = dbgems.get_notebooks_api_token()
+            if verbose: print(f"Using notebook token.")
+        else:
+            if verbose: print(f"Using caller-provided token.")
 
         url = endpoint.rstrip("/") + "/api/"
 
