@@ -18,3 +18,10 @@ class TokenManagementClient(ApiContainer):
     def list(self):
         results = self.client.execute_get_json(url=f"{self.base_url}/tokens")
         return results.get("token_infos", [])
+
+    def delete_by_id(self, token_id):
+        return self.client.execute_delete_json(url=f"{self.base_url}/tokens/{token_id}")
+
+    def get_by_id(self, token_id):
+        return self.client.execute_get_json(url=f"{self.base_url}/tokens/{token_id}")
+

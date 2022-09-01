@@ -28,11 +28,15 @@ class DBAcademyRestClient(ApiClient):
             throttle_seconds: Number of seconds to sleep between requests.
         """
         if endpoint is None:
-            from dbacademy.rest.dbgems_fix import dbgems
+            from dbacademy_gems import dbgems
+            #from dbacademy.rest.dbgems_fix import dbgems
             endpoint = dbgems.get_notebooks_api_endpoint()
+
         if not any((authorization_header, token, password)):
-            from dbacademy.rest.dbgems_fix import dbgems
+            from dbacademy_gems import dbgems
+            #from dbacademy.rest.dbgems_fix import dbgems
             token = dbgems.get_notebooks_api_token()
+
         url = endpoint.rstrip("/") + "/api/"
 
         super().__init__(url,
