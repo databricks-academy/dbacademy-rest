@@ -8,3 +8,7 @@ class Tokens(PermissionsCrud):
 
     def __init__(self, client: ApiClient):
         super().__init__(client, "2.0/permissions/authorization/tokens", "token")
+
+    @property
+    def permission_levels(self):
+        return self.client.execute_get_json(f"{self.path}/permissionLevels")
