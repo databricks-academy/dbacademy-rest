@@ -11,7 +11,7 @@ class Tokens(PermissionsCrud):
     valid_permissions = ["CAN_USE", "CAN_MANAGE"]
 
     def __init__(self, client: ApiClient):
-        super().__init__(client, "2.0/permissions/authorization/tokens", "token")
+        super().__init__(client, "2.0/preview/permissions/authorization/tokens", "token")
 
     @property
     def permission_levels(self):
