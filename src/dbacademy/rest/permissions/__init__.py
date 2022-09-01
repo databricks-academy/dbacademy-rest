@@ -21,3 +21,9 @@ class Permissions(ApiContainer):
 
         from dbacademy.rest.permissions.warehouses import Warehouses
         self.warehouses = Warehouses(client)
+
+        class Authorization:
+            from dbacademy.rest.permissions.authorization_tokens import Tokens
+            self.tokens = Tokens(client)
+
+        self.authorizations = Authorization()
