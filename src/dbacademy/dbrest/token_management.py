@@ -14,3 +14,7 @@ class TokenManagementClient(ApiContainer):
             "lifetime_seconds": lifetime_seconds
         }
         return self.client.execute_post_json(f"{self.base_url}/on-behalf-of/tokens", params)
+
+    def list(self):
+        results = self.client.execute_get_json(url=f"{self.base_url}/tokens")
+        return results.get("token_infos", [])
