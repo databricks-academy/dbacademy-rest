@@ -92,7 +92,7 @@ class JobsClient(ApiContainer):
 
     def delete_by_name(self, job_names, success_only: bool):
         self.client.vprint("-"*80)
-        
+
         if type(job_names) == dict:
             job_names = list(job_names.keys())
         elif type(job_names) == list:
@@ -109,7 +109,7 @@ class JobsClient(ApiContainer):
         self.client.vprint(f"Found {len(jobs)} job{s} in all.")
 
         assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
-        self.client.vprint(f"Deleting successful jobs only: {success_only}")
+        self.client.vprint(f"...deleting successful jobs only: {success_only}")
 
         deleted = 0
 
@@ -145,4 +145,4 @@ class JobsClient(ApiContainer):
                         self.delete_by_job_id(job_id)
                         deleted += 1
 
-        print(f"Deleted {deleted} jobs")
+        print(f"...deleted {deleted} jobs")
