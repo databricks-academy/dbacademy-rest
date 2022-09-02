@@ -94,12 +94,11 @@ class ApiClient(ApiContainer):
         from urllib3.util.retry import Retry
         from requests.adapters import HTTPAdapter
 
-        if verbose:
-            print("ApiClient.__init__")
+        if verbose: print("ApiClient.__init__" + url)
+        if verbose: print("ApiClient.__init__: " + url.indexof("://"))
 
         if client and not url.indexof("://"):
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
-            print("ApiClient.__init__: " + url.indexof("://"))
 
         if authorization_header:
             pass
