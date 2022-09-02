@@ -46,7 +46,7 @@ class JobsClient(ApiContainer):
             job_ids = [j.get("job_id") for j in jobs_list if name == j.get("settings").get("name")]
             return (False, None) if len(job_ids) == 0 else (True, job_ids[0])
 
-        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?limit={limit}"
+        target_url = f"{self.client.endpoint}/api/2.1/jobs/list?limit={limit}"
         response = self.client.execute_get_json(target_url)
         jobs = response.get("jobs", list())
 
@@ -67,7 +67,7 @@ class JobsClient(ApiContainer):
         limit = min(25, limit)
         offset = max(0, offset)
 
-        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?offset={offset}&limit={limit}&expand_tasks={expand_tasks}"
+        target_url = f"{self.client.endpoint}/api/2.1/jobs/list?offset={offset}&limit={limit}&expand_tasks={expand_tasks}"
         response = self.client.execute_get_json(target_url)
         return response.get("jobs", list())
 
@@ -75,7 +75,7 @@ class JobsClient(ApiContainer):
         offset = 0  # Start with zero
         limit = 25  # Default maximum
 
-        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?limit={limit}&expand_tasks={expand_tasks}"
+        target_url = f"{self.client.endpoint}/api/2.1/jobs/list?limit={limit}&expand_tasks={expand_tasks}"
         response = self.client.execute_get_json(target_url)
         all_jobs = response.get("jobs", list())
 
