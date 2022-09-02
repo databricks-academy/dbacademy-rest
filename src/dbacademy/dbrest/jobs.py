@@ -141,13 +141,13 @@ class JobsClient(ApiContainer):
                             print(f""" - The job "{job_name}" was not "SUCCESS" but "{result_state}", this job must be deleted manually""")
 
                     if delete_job:
-                        self.client.vprint(f"Deleting job #{job_id}, \"{job_name}\"")
+                        self.client.vprint(f"...Deleting job #{job_id}, \"{job_name}\"")
                         for run in runs:
                             run_id = run.get("run_id")
-                            self.client.vprint(f""" - Deleting run #{run_id}""")
+                            self.client.vprint(f"""   - Deleting run #{run_id}""")
                             self.client.runs().delete(run_id)
 
                         self.delete_by_id(job_id)
                         deleted += 1
 
-        print(f"...deleted {deleted} jobs")
+        self.client.vprint(f"...deleted {deleted} jobs")
