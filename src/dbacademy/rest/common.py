@@ -219,7 +219,7 @@ class ApiClient(ApiContainer):
             params = {k: str(v).lower() if isinstance(v, bool) else v for k, v in data.items()}
             response = self.session.request(http_method, url, params=params, timeout=timeout)
         else:
-            if self.verbose: print(json.dumps(data, indent=4))
+            # if self.verbose: print(json.dumps(data, indent=4))
             response = self.session.request(http_method, url, data=json.dumps(data), timeout=timeout)
         self._raise_for_status(response, expected)
         return response
