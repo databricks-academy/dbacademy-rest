@@ -14,6 +14,15 @@ class Jobs(PermissionsCrud):
     def __init__(self, client: ApiClient):
         super().__init__(client, "2.0/preview/permissions/jobs", "job")
 
+    def change_owner_user(self, job_id, new_owner_id: str):
+        return self.change_owner(job_id, "user_name", new_owner_id)
+
+    def change_owner_group(self, job_id, new_owner_id: str):
+        return self.change_owner(job_id, "group_name", new_owner_id)
+
+    def change_owner_service_principal(self, job_id, new_owner_id: str):
+        return self.change_owner(job_id, "service_principal_name", new_owner_id)
+
     def change_owner(self, job_id, new_owner_what: What, new_owner_id: str):
 
         old_what, old_id = self.get_owner(job_id)
