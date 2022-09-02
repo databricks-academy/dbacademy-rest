@@ -46,9 +46,18 @@ class JobsClient(ApiContainer):
                 return self.get_by_id(job_id)
         return None
 
-    def list(self):
-        response = self.client.execute_get_json(f"{self.client.endpoint}/api/2.0/jobs/list")
-        return response.get("jobs", list())
+    def list(self, offset: int = 0, limit: int = 25, expand_tasks: bool = False):
+
+        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?limit={limit}&expand_tasks={expand_tasks}"
+        response = self.client.execute_get_json(target_url)
+        all_jobs = response.get("jobs", list())
+
+        while response.get("has_more", False):
+            offset += limit
+            response = self.client.execute_get_json(f"{target_url}&offset={offset}")
+            all_jobs.extend(response.get("jobs", list()))
+
+        return all_jobs
 
     def delete_by_job_id(self, job_id):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/jobs/delete", {"job_id": job_id})
@@ -63,6 +72,7 @@ class JobsClient(ApiContainer):
         else:
             raise TypeError(f"Unsupported type: {type(jobs)}")
 
+        # Get a list of all jobs
         jobs = self.list()
 
         assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
