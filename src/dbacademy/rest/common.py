@@ -95,7 +95,7 @@ class ApiClient(ApiContainer):
         from requests.adapters import HTTPAdapter
 
         if verbose: print("ApiClient.__init__, url: " + url)
-        if verbose: print("ApiClient.__init__, client: " + client)
+        if verbose: print("ApiClient.__init__, client: " + str(client))
 
         if client and not url.indexof("://"):
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
