@@ -12,7 +12,7 @@ class DBAcademyRestClient(ApiClient):
                  password: str = None,
                  authorization_header: str = None,
                  client: ApiClient = None,
-                 verbose = False):
+                 verbose: bool = False):
         """
         Create a Databricks REST API client.
 
@@ -30,12 +30,10 @@ class DBAcademyRestClient(ApiClient):
         """
         if endpoint is None:
             from dbacademy_gems import dbgems
-            #from dbacademy.rest.dbgems_fix import dbgems
             endpoint = dbgems.get_notebooks_api_endpoint()
 
         if not any((authorization_header, token, password)):
             from dbacademy_gems import dbgems
-            #from dbacademy.rest.dbgems_fix import dbgems
             token = dbgems.get_notebooks_api_token()
             if verbose: print(f"Using notebook token.")
         else:
@@ -44,8 +42,14 @@ class DBAcademyRestClient(ApiClient):
         url = endpoint.rstrip("/") + "/api/"
 
         super().__init__(url,
-                         token=token, user=user, password=password, authorization_header=authorization_header,
-                         client=client, throttle_seconds=throttle_seconds)
+                         token=token,
+                         user=user,
+                         password=password,
+                         authorization_header=authorization_header,
+                         client=client,
+                         throttle_seconds=throttle_seconds,
+                         verbose=verbose)
+
         self.endpoint = endpoint
 
         from dbacademy.dbrest.clusters import ClustersClient
