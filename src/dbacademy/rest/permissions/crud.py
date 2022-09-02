@@ -24,6 +24,7 @@ class PermissionsCrud(ApiContainer):
                  plural: str = None,
                  id_key: str = None,
                  name_key: str = None):
+
         super().__init__()
         self.client = client
         if path.startswith("/"):
@@ -43,7 +44,8 @@ class PermissionsCrud(ApiContainer):
             if isinstance(m.__doc__, str):
                 m.__doc__ = m.__doc__.format(**self.__dict__)
 
-    def _validate_what(self, what: What):
+    @staticmethod
+    def _validate_what(what: What):
         if what not in valid_whats:
             raise ValueError(f"Expected 'permission_level' to be one of {valid_whats}, found '{what}'")
 
