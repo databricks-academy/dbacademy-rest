@@ -94,8 +94,8 @@ class ApiClient(ApiContainer):
         from urllib3.util.retry import Retry
         from requests.adapters import HTTPAdapter
 
-        if verbose: print("ApiClient.__init__" + url)
-        if verbose: print("ApiClient.__init__: " + url.indexof("://"))
+        if verbose: print("ApiClient.__init__, url: " + url)
+        if verbose: print("ApiClient.__init__, client: " + client)
 
         if client and not url.indexof("://"):
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
