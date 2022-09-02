@@ -91,8 +91,6 @@ class JobsClient(ApiContainer):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/jobs/delete", {"job_id": job_id})
 
     def delete_by_name(self, job_names, success_only: bool):
-        self.client.vprint("-"*80)
-
         if type(job_names) == dict:
             job_names = list(job_names.keys())
         elif type(job_names) == list:
