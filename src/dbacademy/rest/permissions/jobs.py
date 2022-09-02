@@ -23,19 +23,19 @@ class Jobs(PermissionsCrud):
     def change_owner_service_principal(self, job_id, new_owner_id: str):
         return self.change_owner(job_id, "service_principal_name", new_owner_id)
 
-    def change_owner(self, job_id, new_owner_type: What, new_owner_id: str):
+    def change_owner(self, job_id, owner_type: What, owner_id: str):
 
-        if new_owner_type == "user": new_owner_type = "user_name"
-        if new_owner_type == "group": new_owner_type = "group_name"
-        if new_owner_type == "service_principal": new_owner_type = "service_principal_name"
-        assert new_owner_type in ["user_name", "group_name", "service_principal_name"], f"Expected owner_type to be one of \"user_name\", \"group_name\", or \"service_principal_name\", found \"{new_owner_type}\"."
+        if owner_type == "user": owner_type = "user_name"
+        if owner_type == "group": owner_type = "group_name"
+        if owner_type == "service_principal": owner_type = "service_principal_name"
+        assert owner_type in ["user_name", "group_name", "service_principal_name"], f"Expected owner_type to be one of \"user_name\", \"group_name\", or \"service_principal_name\", found \"{owner_type}\"."
 
         old_what, old_id = self.get_owner(job_id)
 
         params = {
             "access_control_list": [
                 {
-                    new_owner_type: new_owner_id,
+                    owner_type: owner_id,
                     "permission_level": "IS_OWNER"
                 },
                 {
