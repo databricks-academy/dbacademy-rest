@@ -147,7 +147,7 @@ class JobsClient(ApiContainer):
                             self.client.vprint(f""" - Deleting run #{run_id}""")
                             self.client.runs().delete(run_id)
 
-                        self.delete_by_job_id(job_id)
+                        self.delete_by_id(job_id)
                         deleted += 1
 
         print(f"...deleted {deleted} jobs")
