@@ -38,15 +38,42 @@ class JobsClient(ApiContainer):
     def get_by_id(self, job_id):
         return self.client.execute_get_json(f"{self.client.endpoint}/api/2.0/jobs/get?job_id={job_id}")
 
-    def get_by_name(self, name):
-        jobs = self.list()
-        for job in jobs:
-            if name == job.get("settings").get("name"):
-                job_id = job["job_id"]
-                return self.get_by_id(job_id)
+    def get_by_name(self, name: str):
+        offset = 0  # Start with zero
+        limit = 25  # Default maximum
+
+        def search(jobs_list):
+            job_ids = [j.get("job_id") for j in jobs_list if name == j.get("settings").get("name")]
+            return (False, None) if len(job_ids) == 0 else (True, job_ids[0])
+
+        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?limit={limit}"
+        response = self.client.execute_get_json(target_url)
+        jobs = response.get("jobs", list())
+
+        found, job = search(jobs)
+        if found: return job
+
+        while response.get("has_more", False):
+            offset += limit
+            response = self.client.execute_get_json(f"{target_url}&offset={offset}")
+            jobs = response.get("jobs", list())
+
+            found, job = search(jobs)
+            if found: return job
+
         return None
 
-    def list(self, offset: int = 0, limit: int = 25, expand_tasks: bool = False):
+    def list_n(self, offset: int = 0, limit: int = 25, expand_tasks: bool = False):
+        limit = min(25, limit)
+        offset = max(0, offset)
+
+        target_url = f"{self.client.endpoint}/api/2.0/jobs/list?offset={offset}&limit={limit}&expand_tasks={expand_tasks}"
+        response = self.client.execute_get_json(target_url)
+        return response.get("jobs", list())
+
+    def list(self, expand_tasks: bool = False):
+        offset = 0  # Start with zero
+        limit = 25  # Default maximum
 
         target_url = f"{self.client.endpoint}/api/2.0/jobs/list?limit={limit}&expand_tasks={expand_tasks}"
         response = self.client.execute_get_json(target_url)
