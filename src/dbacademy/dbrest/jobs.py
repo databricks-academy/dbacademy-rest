@@ -90,15 +90,15 @@ class JobsClient(ApiContainer):
     def delete_by_job_id(self, job_id):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/jobs/delete", {"job_id": job_id})
 
-    def delete_by_name(self, jobs, success_only: bool):
-        if type(jobs) == dict:
-            job_list = list(jobs.keys())
-        elif type(jobs) == list:
-            job_list = jobs
-        elif type(jobs) == str:
-            job_list = [jobs]
+    def delete_by_name(self, job_names, success_only: bool):
+        if type(job_names) == dict:
+            job_names = list(job_names.keys())
+        elif type(job_names) == list:
+            job_names = job_names
+        elif type(job_names) == str:
+            job_names = [job_names]
         else:
-            raise TypeError(f"Unsupported type: {type(jobs)}")
+            raise TypeError(f"Unsupported type: {type(job_names)}")
 
         # Get a list of all jobs
         jobs = self.list()
@@ -111,7 +111,7 @@ class JobsClient(ApiContainer):
         # s = "s" if len(jobs) != 1 else ""
         # print(f"Found {len(jobs)} job{s} total")
 
-        for job_name in job_list:
+        for job_name in job_names:
             for job in jobs:
                 if job_name == job["settings"]["name"]:
                     job_id = job["job_id"]
