@@ -23,14 +23,14 @@ class Jobs(PermissionsCrud):
     def change_owner_service_principal(self, job_id, new_owner_id: str):
         return self.change_owner(job_id, "service_principal_name", new_owner_id)
 
-    def change_owner(self, job_id, new_owner_what: What, new_owner_id: str):
+    def change_owner(self, job_id, new_owner_type: What, new_owner_id: str):
 
         old_what, old_id = self.get_owner(job_id)
 
         params = {
             "access_control_list": [
                 {
-                    new_owner_what: new_owner_id,
+                    new_owner_type: new_owner_id,
                     "permission_level": "IS_OWNER"
                 },
                 {
