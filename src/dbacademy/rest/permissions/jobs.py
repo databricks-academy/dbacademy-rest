@@ -3,9 +3,45 @@ from dbacademy.rest.permissions.crud import PermissionsCrud
 
 __all__ = ["Jobs"]
 
+# noinspection PyProtectedMember
+from dbacademy.rest.permissions.crud import What, valid_whats, PermissionLevel
+
 
 class Jobs(PermissionsCrud):
+
     valid_permissions = ["IS_OWNER", "CAN_MANAGE_RUN", "CAN_VIEW", "CAN_MANAGE"]
 
     def __init__(self, client: ApiClient):
         super().__init__(client, "2.0/preview/permissions/jobs", "job")
+
+    def change_owner(self, job_id, new_owner_what: What, new_owner_id: str):
+
+        old_what, old_id = self.get_owner(job_id)
+
+        params = {
+            "access_control_list": [
+                {
+                    new_owner_what: new_owner_id,
+                    "permission_level": "IS_OWNER"
+                },
+                {
+                    old_what: old_id,
+                    "permission_level": "CAN_MANAGE"
+                }
+            ]
+        }
+        return self.client.execute_patch_json(self.path, params=params)
+
+    def get_owner(self, job_id):
+        results = self.get(job_id)
+        for access_control in results.get("access_control_list"):
+            for permission in access_control.get("all_permissions"):
+                if permission.get("permission_level") == "IS_OWNER":
+                    if "user_name" in access_control:
+                        return "user_name", access_control.get("user_name")
+                    elif "group_name" in access_control:
+                        return "group_name", access_control.get("group_name")
+                    elif "service_principal_name" in access_control:
+                        return "service_principal_name", access_control.get("service_principal_name")
+                    else:
+                        raise ValueError(f"Could not find user, group or service principal name for job {job_id}")
