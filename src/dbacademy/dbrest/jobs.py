@@ -53,7 +53,7 @@ class JobsClient(ApiContainer):
     def delete_by_job_id(self, job_id):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/jobs/delete", {"job_id": job_id})
 
-    def delete_by_name(self, jobs, success_only):
+    def delete_by_name(self, jobs, success_only: bool):
         if type(jobs) == dict:
             job_list = list(jobs.keys())
         elif type(jobs) == list:
@@ -61,9 +61,12 @@ class JobsClient(ApiContainer):
         elif type(jobs) == str:
             job_list = [jobs]
         else:
-            raise Exception(f"Unsupported type: {type(jobs)}")
+            raise TypeError(f"Unsupported type: {type(jobs)}")
 
         jobs = self.list()
+
+        assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
+        print(f"Deleting successful jobs only: {success_only}")
 
         deleted = 0
         # s = "s" if len(jobs) != 1 else ""
