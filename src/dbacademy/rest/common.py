@@ -63,6 +63,9 @@ class ApiContainer(object):
 
 
 class ApiClient(ApiContainer):
+
+    url: str = None
+
     def __init__(self,
                  url: str,
                  *,
@@ -71,7 +74,8 @@ class ApiClient(ApiContainer):
                  password: str = None,
                  authorization_header: str = None,
                  client: ApiClient = None,
-                 throttle_seconds: int = 0):
+                 throttle_seconds: int = 0,
+                 verbose: bool = False):
         """
         Create a Databricks REST API client.
 
@@ -90,8 +94,13 @@ class ApiClient(ApiContainer):
         from urllib3.util.retry import Retry
         from requests.adapters import HTTPAdapter
 
+        if verbose:
+            print("ApiClient.__init__")
+
         if client and not url.indexof("://"):
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
+            print("ApiClient.__init__: " + url.indexof("://"))
+
         if authorization_header:
             pass
         elif token is not None:
@@ -104,6 +113,7 @@ class ApiClient(ApiContainer):
             authorization_header = client.authorization_header
         else:
             raise ValueError("Must specify one of token, password, or authorization_header")
+
         if not url.endswith("/"):
             url += "/"
 
@@ -117,11 +127,13 @@ class ApiClient(ApiContainer):
         self.read_timeout = 300   # seconds
         self.connect_timeout = 5  # seconds
         self._last_request_timestamp = 0
+        self.verbose = verbose
 
         backoff_factor = self.connect_timeout
         retry = Retry(connect=Retry.BACKOFF_MAX / backoff_factor, backoff_factor=backoff_factor)
         self.session = requests.Session()
         self.session.headers = {'Authorization': authorization_header, 'Content-Type': 'text/json'}
+        # noinspection HttpUrlsUsage
         self.session.mount('http://', HTTPAdapter(max_retries=retry))
         self.session.mount('https://', HTTPAdapter(max_retries=retry))
 
