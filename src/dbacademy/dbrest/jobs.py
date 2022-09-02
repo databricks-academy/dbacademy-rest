@@ -102,23 +102,23 @@ class JobsClient(ApiContainer):
 
         # Get a list of all jobs
         jobs = self.list()
-        self.client.vprint(f"Found {len(jobs)} jobs in all.")
+
+        s = "s" if len(jobs) != 1 else ""
+        self.client.vprint(f"Found {len(jobs)} job{s} in all.")
 
         assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
-        # print(f"Deleting successful jobs only: {success_only}")
+        self.client.vprint(f"Deleting successful jobs only: {success_only}")
 
         deleted = 0
-        # s = "s" if len(jobs) != 1 else ""
-        # print(f"Found {len(jobs)} job{s} total")
 
         for job_name in job_names:
             for job in jobs:
-                if job_name == job["settings"]["name"]:
-                    job_id = job["job_id"]
+                if job_name == job.get("settings").get("name"):
+                    job_id = job.get("job_id")
 
                     runs = self.client.runs().list_by_job_id(job_id)
-                    # s = "s" if len(runs) != 1 else ""
-                    # print(f"Found {len(runs)} run{s} for job {job_id}")
+                    s = "s" if len(runs) != 1 else ""
+                    self.client.vprint(f"Found {len(runs)} run{s} for job {job_id}")
                     delete_job = True
 
                     for run in runs:
@@ -134,10 +134,10 @@ class JobsClient(ApiContainer):
                             print(f""" - The job "{job_name}" was not "SUCCESS" but "{result_state}", this job must be deleted manually""")
 
                     if delete_job:
-                        print(f"Deleting job #{job_id}, \"{job_name}\"")
+                        self.client.vprint(f"Deleting job #{job_id}, \"{job_name}\"")
                         for run in runs:
                             run_id = run.get("run_id")
-                            print(f""" - Deleting run #{run_id}""")
+                            self.client.vprint(f""" - Deleting run #{run_id}""")
                             self.client.runs().delete(run_id)
 
                         self.delete_by_job_id(job_id)
