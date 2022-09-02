@@ -1,5 +1,5 @@
 from dbacademy.dbrest import DBAcademyRestClient
-from dbacademy.rest.common import ApiContainer
+from dbacademy.rest.common import ApiClient, ApiContainer
 
 __all__ = ["Tokens"]
 
@@ -7,7 +7,7 @@ __all__ = ["Tokens"]
 from dbacademy.rest.permissions.crud import What, PermissionLevel
 
 class Tokens(ApiContainer):
-    def __init__(self, client: DBAcademyRestClient):
+    def __init__(self, client: ApiClient):
         self.client = client
         self.base_url = f"{self.client.endpoint}/api/2.0/preview/permissions/authorization/tokens"
 
