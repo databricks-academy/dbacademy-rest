@@ -96,3 +96,7 @@ class DBAcademyRestClient(ApiClient):
 
         from dbacademy.dbrest.workspace import WorkspaceClient
         self.workspace = WorkspaceClient(self)
+
+    def vprint(self, what):
+        if self.verbose:
+            print(what)

@@ -5,6 +5,7 @@ from dbacademy.rest.common import ApiContainer
 class JobsClient(ApiContainer):
     def __init__(self, client: DBAcademyRestClient):
         self.client = client      # Client API exposing other operations to this class
+        self.base_uri = f"{self.client.endpoint}/api/2.1/jobs"
 
     def create(self, params):
         if "notebook_task" in params:
@@ -101,6 +102,7 @@ class JobsClient(ApiContainer):
 
         # Get a list of all jobs
         jobs = self.list()
+        self.client.vprint(f"Found {len(jobs)} jobs in all.")
 
         assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
         # print(f"Deleting successful jobs only: {success_only}")
