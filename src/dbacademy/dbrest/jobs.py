@@ -88,6 +88,13 @@ class JobsClient(ApiContainer):
         return all_jobs
 
     def delete_by_job_id(self, job_id):
+        print("*" * 80)
+        print("* DEPRECATION WARNING")
+        print("* delete_by_job_id() has been replaced by delete_by_id()")
+        print("*" * 80)
+        return self.delete_by_id(job_id)
+
+    def delete_by_id(self, job_id):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/jobs/delete", {"job_id": job_id})
 
     def delete_by_name(self, job_names, success_only: bool):
