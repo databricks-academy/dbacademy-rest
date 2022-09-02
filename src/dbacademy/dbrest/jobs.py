@@ -44,7 +44,7 @@ class JobsClient(ApiContainer):
 
         def search(jobs_list):
             job_ids = [j.get("job_id") for j in jobs_list if name == j.get("settings").get("name")]
-            return (False, None) if len(job_ids) == 0 else (True, job_ids[0])
+            return (False, None) if len(job_ids) == 0 else (True, self.get_by_id(job_ids[0]))
 
         target_url = f"{self.client.endpoint}/api/2.1/jobs/list?limit={limit}"
         response = self.client.execute_get_json(target_url)
