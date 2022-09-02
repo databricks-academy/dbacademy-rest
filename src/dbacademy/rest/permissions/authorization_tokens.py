@@ -9,7 +9,7 @@ from dbacademy.rest.permissions.crud import What, PermissionLevel
 class Tokens(ApiContainer):
     def __init__(self, client: DBAcademyRestClient):
         self.client = client
-        self.base_url = f"{self.client.endpoint}/api/2.0/preview/tokens"
+        self.base_url = f"{self.client.endpoint}/permissions/authorization/tokens"
 
     def get_levels(self) -> dict:
         return self.client.execute_get_json(f"{self.base_url}/permissionLevels")
