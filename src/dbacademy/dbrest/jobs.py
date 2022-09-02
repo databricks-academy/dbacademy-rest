@@ -66,7 +66,7 @@ class JobsClient(ApiContainer):
         jobs = self.list()
 
         assert type(success_only) == bool, f"Expected \"success_only\" to be of type \"bool\", found \"{success_only}\"."
-        print(f"Deleting successful jobs only: {success_only}")
+        # print(f"Deleting successful jobs only: {success_only}")
 
         deleted = 0
         # s = "s" if len(jobs) != 1 else ""
