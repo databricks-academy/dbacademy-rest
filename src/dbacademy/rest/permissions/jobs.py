@@ -30,7 +30,7 @@ class Jobs(PermissionsCrud):
                 }
             ]
         }
-        return self.client.execute_patch_json(f"{self.path}", params=params)
+        return self.client.api("GET", f"{self.path}/{job_id}", data=params)
 
     def get_owner(self, job_id):
         results = self.get(job_id)
