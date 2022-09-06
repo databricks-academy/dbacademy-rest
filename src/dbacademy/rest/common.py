@@ -97,7 +97,7 @@ class ApiClient(ApiContainer):
         # if verbose: print("ApiClient.__init__, url: " + url)
         # if verbose: print("ApiClient.__init__, client: " + str(client))
 
-        if client and not url.find("://") >= 0:
+        if client and "://" not in url:
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
 
         if authorization_header:
@@ -109,7 +109,7 @@ class ApiClient(ApiContainer):
             encoded_auth = (user + ":" + password).encode()
             authorization_header = "Basic " + base64.standard_b64encode(encoded_auth).decode()
         elif client is not None:
-            authorization_header = client.authorization_header
+            authorization_header = client.session.headers["Authorization"]
         else:
             raise ValueError("Must specify one of token, password, or authorization_header")
 
@@ -129,7 +129,7 @@ class ApiClient(ApiContainer):
         self.verbose = verbose
 
         backoff_factor = self.connect_timeout
-        retry = Retry(connect=Retry.BACKOFF_MAX / backoff_factor, backoff_factor=backoff_factor)
+        retry = Retry(connect=0, backoff_factor=backoff_factor)
         self.session = requests.Session()
         self.session.headers = {'Authorization': authorization_header, 'Content-Type': 'text/json'}
         # noinspection HttpUrlsUsage
@@ -288,35 +288,35 @@ class ApiClient(ApiContainer):
         raise e
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_patch_json(self, url: str, params: dict, expected=199) -> dict:
+    def execute_patch_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("PATCH", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_patch(self, url: str, params: dict, expected=199):
+    def execute_patch(self, url: str, params: dict, expected=200):
         return self.api_raw("PATCH", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_post_json(self, url: str, params: dict, expected=199) -> dict:
+    def execute_post_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("POST", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_post(self, url: str, params: dict, expected=199):
+    def execute_post(self, url: str, params: dict, expected=200):
         return self.api_raw("POST", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_put_json(self, url: str, params: dict, expected=199) -> dict:
+    def execute_put_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("PUT", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_put(self, url: str, params: dict, expected=199):
+    def execute_put(self, url: str, params: dict, expected=200):
         return self.api_raw("PUT", url, params, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_get_json(self, url: str, expected=199) -> Union[dict, None]:
+    def execute_get_json(self, url: str, expected=200) -> Union[dict, None]:
         return self.api("GET", url, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")
-    def execute_get(self, url: str, expected=199):
+    def execute_get(self, url: str, expected=200):
         return self.api_raw("GET", url, expected=expected)
 
     @deprecated(reason="Use ApiClient.api instead", action="ignore")

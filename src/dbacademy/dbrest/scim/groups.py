@@ -21,7 +21,7 @@ class ScimGroupsClient(ApiContainer):
 
     def get_by_name(self, name):
         for group in self.list():
-            if name == group.get("displayName"):
+            if name == group.get("name"):
                 return group
 
         return None
