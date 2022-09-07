@@ -119,10 +119,10 @@ class WorkspaceClient(ApiContainer):
         })
         return self.client.execute_get(f"{self.client.endpoint}/api/2.0/workspace/export?{params}").text
 
-    def get_status(self, notebook_path) -> Union[None, dict]:
+    def get_status(self, path) -> Union[None, dict]:
         from urllib.parse import urlencode
         params = urlencode({
-            "path": notebook_path
+            "path": path
         })
         response = self.client.execute_get(f"{self.client.endpoint}/api/2.0/workspace/get-status?{params}", expected=[200, 404])
         if response.status_code == 404:
