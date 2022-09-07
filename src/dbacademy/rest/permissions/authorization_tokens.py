@@ -1,18 +1,16 @@
-from dbacademy.dbrest import DBAcademyRestClient
 from dbacademy.rest.common import ApiClient, ApiContainer
+
+# from dbacademy.rest.permissions.crud import What, PermissionLevel
 
 __all__ = ["Tokens"]
 
-# noinspection PyProtectedMember
-from dbacademy.rest.permissions.crud import What, PermissionLevel
 
 class Tokens(ApiContainer):
     def __init__(self, client: ApiClient):
         self.client = client
-        self.base_url = f"{self.client.endpoint}/api/2.0/preview/permissions/authorization/tokens"
 
     def get_levels(self) -> dict:
-        return self.client.execute_get_json(f"{self.base_url}/permissionLevels")
+        return self.client.execute_get_json(f"2.0/preview/permissions/authorization/tokens/permissionLevels")
 
     # def update(self, object_id: str, what: What, value: str, permission_level: PermissionLevel):
     #     self._validate_what(what)
