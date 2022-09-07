@@ -117,7 +117,7 @@ class WorkspaceClient(ApiContainer):
             "format": "DBC",
             "direct_download": "true"
         })
-        return self.client.execute_get(f"{self.client.endpoint}/api/2.0/workspace/export?{params}").text
+        return self.client.execute_get(f"{self.client.endpoint}/api/2.0/workspace/export?{params}").content
 
     def get_status(self, path) -> Union[None, dict]:
         from urllib.parse import urlencode
