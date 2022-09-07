@@ -7,7 +7,10 @@ class WorkspaceClient(ApiContainer):
     def __init__(self, client: DBAcademyRestClient):
         self.client = client
 
-    def ls(self, path, recursive=False, object_types=["NOTEBOOK"]):
+    def ls(self, path, recursive=False, object_types=None):
+
+        object_types = object_types or ["NOTEBOOK"]
+
         if not recursive:
             try:
                 results = self.client.execute_get_json(f"{self.client.endpoint}/api/2.0/workspace/list?path={path}", expected=[200, 404])
@@ -26,12 +29,12 @@ class WorkspaceClient(ApiContainer):
                 return None
 
             while len(queue) > 0:
-                next = queue.pop()
-                object_type = next["object_type"]
+                next_item = queue.pop()
+                object_type = next_item["object_type"]
                 if object_type in object_types:
-                    entities.append(next)
+                    entities.append(next_item)
                 elif object_type == "DIRECTORY":
-                    result = self.ls(next["path"])
+                    result = self.ls(next_item["path"])
                     if result is not None: queue.extend(result)
 
             return entities
@@ -67,6 +70,8 @@ class WorkspaceClient(ApiContainer):
 
         if source_url is not None:
             if os.path.exists(local_file_path): os.remove(local_file_path)
+
+            # noinspection PyUnresolvedReferences
             urllib.request.urlretrieve(source_url, local_file_path)
 
         with open(local_file_path, mode='rb') as file:
