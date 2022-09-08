@@ -10,10 +10,17 @@ reqs = [
     "Deprecated",
 ]
 
+def find_dbacademy_packages():
+    packages = find_packages(where="src")
+    if "dbacademy" in packages:
+        del packages[packages.index("dbacademy")]
+    return packages
+
+
 setuptools.setup(
     name="dbacademy-rest",
     version="0.1",
-    packages=find_packages(),
     install_requires=reqs,
-    dependency_links=["git+https://github.com/databricks-academy/dbacademy-gems"]
+    package_dir={"dbacademy": "src/dbacademy"},
+    packages=find_dbacademy_packages()
 )

@@ -63,6 +63,9 @@ class ApiContainer(object):
 
 
 class ApiClient(ApiContainer):
+
+    url: str = None
+
     def __init__(self,
                  url: str,
                  *,
@@ -71,7 +74,8 @@ class ApiClient(ApiContainer):
                  password: str = None,
                  authorization_header: str = None,
                  client: ApiClient = None,
-                 throttle_seconds: int = 0):
+                 throttle_seconds: int = 0,
+                 verbose: bool = False):
         """
         Create a Databricks REST API client.
 
@@ -90,8 +94,12 @@ class ApiClient(ApiContainer):
         from urllib3.util.retry import Retry
         from requests.adapters import HTTPAdapter
 
+        # if verbose: print("ApiClient.__init__, url: " + url)
+        # if verbose: print("ApiClient.__init__, client: " + str(client))
+
         if client and "://" not in url:
             url = client.url.lstrip("/") + "/" + url.rstrip("/")
+
         if authorization_header:
             pass
         elif token is not None:
@@ -104,6 +112,7 @@ class ApiClient(ApiContainer):
             authorization_header = client.session.headers["Authorization"]
         else:
             raise ValueError("Must specify one of token, password, or authorization_header")
+
         if not url.endswith("/"):
             url += "/"
 
@@ -117,11 +126,13 @@ class ApiClient(ApiContainer):
         self.read_timeout = 300   # seconds
         self.connect_timeout = 5  # seconds
         self._last_request_timestamp = 0
+        self.verbose = verbose
 
         backoff_factor = self.connect_timeout
         retry = Retry(connect=0, backoff_factor=backoff_factor)
         self.session = requests.Session()
         self.session.headers = {'Authorization': authorization_header, 'Content-Type': 'text/json'}
+        # noinspection HttpUrlsUsage
         self.session.mount('http://', HTTPAdapter(max_retries=retry))
         self.session.mount('https://', HTTPAdapter(max_retries=retry))
 
@@ -208,6 +219,7 @@ class ApiClient(ApiContainer):
             params = {k: str(v).lower() if isinstance(v, bool) else v for k, v in data.items()}
             response = self.session.request(http_method, url, params=params, timeout=timeout)
         else:
+            # if self.verbose: print(json.dumps(data, indent=4))
             response = self.session.request(http_method, url, data=json.dumps(data), timeout=timeout)
         self._raise_for_status(response, expected)
         return response
