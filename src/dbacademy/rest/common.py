@@ -129,7 +129,10 @@ class ApiClient(ApiContainer):
         self.verbose = verbose
 
         backoff_factor = self.connect_timeout
-        retry = Retry(connect=0, backoff_factor=backoff_factor)
+
+        # retry = Retry(connect=0, backoff_factor=backoff_factor)
+        retry = Retry(connect=Retry.BACKOFF_MAX / backoff_factor, backoff_factor=backoff_factor)
+        
         self.session = requests.Session()
         self.session.headers = {'Authorization': authorization_header, 'Content-Type': 'text/json'}
         # noinspection HttpUrlsUsage
