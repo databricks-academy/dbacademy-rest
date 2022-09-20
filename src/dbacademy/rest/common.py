@@ -290,43 +290,58 @@ class ApiClient(ApiContainer):
             e = DatabricksApiException(http_exception=e)
         raise e
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    def simple_get(self, url: str, expected=200, **data) -> dict:
+        return self.api("GET", url, data=data, expected=expected)
+
+    def simple_post(self, url: str, expected=200, **data) -> dict:
+        return self.api("POST", url, data=data, expected=expected)
+
+    def simple_put(self, url: str, expected=200, **data) -> dict:
+        return self.api("PUT", url, data=data, expected=expected)
+
+    def simple_delete(self, url: str, expected=200, **data) -> dict:
+        return self.api("DELETE", url, data=data, expected=expected)
+
+    def simple_patch(self, url: str, expected=200, **data) -> dict:
+        return self.api("PATCH", url, data=data, expected=expected)
+
+    @deprecated(reason="Use ApiClient.simple_patch", action="ignore")
     def execute_patch_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("PATCH", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_patch", action="error")
     def execute_patch(self, url: str, params: dict, expected=200):
         return self.api_raw("PATCH", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_post", action="ignore")
     def execute_post_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("POST", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_post", action="error")
     def execute_post(self, url: str, params: dict, expected=200):
         return self.api_raw("POST", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_put", action="ignore")
     def execute_put_json(self, url: str, params: dict, expected=200) -> dict:
         return self.api("PUT", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_put", action="error")
     def execute_put(self, url: str, params: dict, expected=200):
         return self.api_raw("PUT", url, params, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_get", action="ignore")
     def execute_get_json(self, url: str, expected=200) -> Union[dict, None]:
         return self.api("GET", url, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_get", action="error")
     def execute_get(self, url: str, expected=200):
         return self.api_raw("GET", url, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_delete", action="ignore")
     def execute_delete_json(self, url: str, expected=(200, 404)) -> dict:
         return self.api("DELETE", url, expected=expected)
 
-    @deprecated(reason="Use ApiClient.api instead", action="ignore")
+    @deprecated(reason="Use ApiClient.simple_delete", action="error")
     def execute_delete(self, url: str, expected=(200, 404)):
         return self.api_raw("DELETE", url, expected=expected)
 
