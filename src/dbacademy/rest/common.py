@@ -229,14 +229,14 @@ class ApiClient(ApiContainer):
 
     def _verify_hostname(self):
         """Verify the host for the url-endpoint exists.  Throws socket.gaierror if it does not."""
-        import urllib.parse
-        import socket
-        url = urllib.parse.urlparse(self.url)
+        from urllib.parse import urlparse
+        from socket import gethostbyname, gaierror
+        from requests.exceptions import ConnectionError
+        url = urlparse(self.url)
         try:
-            result = socket.gethostbyname(url.hostname)
-        except socket.gaierror as e:
-            e.strerror += "; DNS lookup for hostname failed."
-            raise e
+            result = gethostbyname(url.hostname)
+        except gaierror as e:
+            raise ConnectionError("DNS lookup for hostname failed") from e
 
     def _throttle_calls(self):
         if self.throttle_seconds <= 0:
