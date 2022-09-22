@@ -86,11 +86,12 @@ class PipelinesClient(ApiContainer):
 
         if pipeline_id is None:
             pipeline = self.get_by_name(name)
-            pipeline_id = pipeline.get("pipeline_id")
-            self.update_from_dict(pipeline_id, params)
-            return pipeline_id
-        else:
-            return self.create_from_dict(params).get("pipeline_id")
+            if pipeline is not None:
+                pipeline_id = pipeline.get("pipeline_id")
+                self.update_from_dict(pipeline_id, params)
+                return pipeline_id
+
+        return self.create_from_dict(params).get("pipeline_id")
 
     def update(self, pipeline_id: str, name: str, storage: str, target: str, continuous: bool = False, development: bool = True, configuration: dict = None, notebooks: list = None, libraries: list = None, clusters: list = None, min_workers: int = 0, max_workers: int = 0, photon: bool = True):
         params = self.to_dict(name=name,
