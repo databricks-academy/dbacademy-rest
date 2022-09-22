@@ -130,7 +130,6 @@ class ApiClient(ApiContainer):
 
         backoff_factor = self.connect_timeout
 
-        # retry = Retry(connect=0, backoff_factor=backoff_factor)
         retry = Retry(connect=Retry.BACKOFF_MAX / backoff_factor, backoff_factor=backoff_factor)
 
         self.session = requests.Session()
@@ -210,6 +209,7 @@ class ApiClient(ApiContainer):
         import json
         if data is None:
             data = {}
+        self._verify_hostname()
         self._throttle_calls()
         if endpoint_path.startswith(self.url):
             endpoint_path = endpoint_path[len(self.url):]
@@ -226,6 +226,17 @@ class ApiClient(ApiContainer):
             response = self.session.request(http_method, url, data=json.dumps(data), timeout=timeout)
         self._raise_for_status(response, expected)
         return response
+
+    def _verify_hostname(self):
+        """Verify the host for the url-endpoint exists.  Throws socket.gaierror if it does not."""
+        import urllib.parse
+        import socket
+        url = urllib.parse.urlparse(self.url)
+        try:
+            result = socket.gethostbyname(url.hostname)
+        except socket.gaierror as e:
+            e.strerror += "; DNS lookup for hostname failed."
+            raise e
 
     def _throttle_calls(self):
         if self.throttle_seconds <= 0:
