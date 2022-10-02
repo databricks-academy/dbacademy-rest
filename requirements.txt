@@ -5,3 +5,4 @@ urllib3~=1.25.11
 overrides~=6.1.0
 Deprecated~=1.2.13
 git+https://github.com/databricks-academy/dbacademy-gems
+databricks-connect==10.4.*
