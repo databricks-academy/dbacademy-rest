@@ -103,7 +103,6 @@ class WorkspaceClient(ApiContainer):
         return self.client.execute_post_json(f"{self.client.endpoint}/api/2.0/workspace/import", payload)
 
     def export_notebook(self, path: str) -> str:
-        from urllib.parse import urlencode
         return self.client.simple_get("2.0/workspace/export", path=path, format="SOURCE", direct_download=True)
 
     def export_dbc(self, path):

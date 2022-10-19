@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Container, Dict, Literal, TypeVar, Union
+from typing import Container, Dict, Literal, TypeVar, Union, List
 
 from deprecated.classic import deprecated
 from pprint import pformat
@@ -234,7 +234,7 @@ class ApiClient(ApiContainer):
         from requests.exceptions import ConnectionError
         url = urlparse(self.url)
         try:
-            result = gethostbyname(url.hostname)
+            gethostbyname(url.hostname)
         except gaierror as e:
             raise ConnectionError("DNS lookup for hostname failed") from e
 
@@ -301,7 +301,14 @@ class ApiClient(ApiContainer):
             e = DatabricksApiException(http_exception=e)
         raise e
 
-    def simple_get(self, url: str, expected=200, **data) -> dict:
+    def simple_get(self, url: str, expected: Union[int, List[int]] = 200, **data) -> Union[None, str, Dict]:
+        """
+        :param url:
+        :param expected: either a single HTTP status code or a list of status codes
+        :param data:
+        :return: None when expected includes 404, str when the content
+        type is text and a dictionary when the content type is JSON
+        """
         return self.api("GET", url, data=data, expected=expected)
 
     def simple_post(self, url: str, expected=200, **data) -> dict:
